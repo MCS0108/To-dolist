@@ -28,6 +28,7 @@ html, body {
 .kreuzDiv{
     display: flex;
     justify-content: end;
+    height: 30px;
 }
 
 .imgKreuz {
@@ -35,7 +36,7 @@ html, body {
 }
 
 .kreuzButton{
-    margin-right: 5px;
+    margin-right: 0px;
     margin-top: 5px;
     border: none;
     background-color: transparent;
@@ -50,4 +51,68 @@ html, body {
 
 .todoAnzeige{
     background-color: rgb(208, 207, 207);
+}
+
+.ordnerAdd{
+    border: none;
+    height: 29px;
+    border-radius: 3px;
+    
+}
+
+.inputOrdner {
+    margin: 2px;
+    width: 50px;
+    margin-top: 5px;
+    border-radius: 2px;
+    border: 1px black solid
+}
+
+.Allgemein {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    height: 30px;
+    align-items: center;
+}
+
+.nameOrdner{
+    font-size: 14px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-left: 5px;
+}
+
+.ellipsis-vertical_Button{
+    width: 3px;
+}
+
+.editButton{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 2px;
+    margin-right: 5px;
+}
+
+.editOrdner{
+    margin-right: -80px;
+}
+
+.renameBild {
+    width: 12px;
+}
+
+.trashBild{
+    width: 12px;
+}
+
+.renameButton{
+    border: none;
+    background-color: transparent;
+}
+
+.trashButton{
+    border: none;
+    background-color: transparent;
+    margin-left: -8px;
 }
