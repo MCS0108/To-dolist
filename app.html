@@ -17,47 +17,15 @@
 
         <div class="kreuzDiv">
             <div class="modal" id="kreuzModal">
-                <input class="inputOrdner" type="text" placeholder="Name: ">
-                <button data-close-button class="quitButton">
-                    <img class="imgKreuzQuit" src="Bilder/white plus.svg" alt="">
-                </button>
+                <input class="inputOrdner" type="text" onkeydown="handleKeyDown(event)" placeholder="Name: ">
             </div>
             <button data-modal-target="#kreuzModal" class="kreuzButton">
                 <img class="imgKreuz" src="Bilder/white plus.svg">
             </button>
         </div>
         
+        
         <div class="Ordner">
-
-
-
-            <div class="ordnerBar">
-
-                <p class="nameOrdner">Allgemein</p>
-
-                <div class="editOrdner">
-
-                    <div class="modal" id="editModal">
-
-                        <button data-close-button class="QuitButton renameButton">
-                            <img class="renameBild" src="Bilder/oen to square white.svg" alt="">
-                        </button>
-
-                        <button data-close-button class="QuitButton trashButton">
-                            <img class="trashBild" src="Bilder/trash white.svg" alt="">
-                        </button>
-
-                    </div>
-
-                    <button data-modal-target="#editModal" class="editButton">
-                        <img class="ellipsis-vertical_Button" src="Bilder/elipsis white.svg" alt="">
-                    </button>
-
-                </div>
-
-            </div>
-
-            
 
         </div>
         
@@ -65,12 +33,12 @@
     </div>
 
     <div class="todoAnzeige">
-        <p class="ordnerName">Allgemein:</p>
+        <p class="ordnerName"></p>
 
         <div class="to-do-Bar">
 
             <img class="bars-solid" src="Bilder/bars-solid-white.svg" alt="">
-            <input class="addNewCard" type="text" onkeydown="handleKeyDown(event)" placeholder="Add a new To-Do:">
+            <input class="addNewCard" type="text" onkeydown="enter(event)" placeholder="Add a new To-Do:">
 
 
         </div>
@@ -86,7 +54,6 @@
             </div>
 
             <div class="Reset">
-                <button class="clearAllButton">Clear All</button>
             </div>  
 
         </div>

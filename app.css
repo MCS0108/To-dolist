@@ -44,7 +44,9 @@ html, body {
     width: 50px;
     margin-top: 5px;
     border-radius: 2px;
-    border: 1px black solid
+    border: 1px black solid;
+    padding: 4px;
+    border-radius: 8px;
 }
 
 .quitButton{
@@ -86,7 +88,7 @@ html, body {
 }
 
 .ordnerBar:hover{
-    background-color: rgb(71, 69, 69);
+    background-color: rgb(53, 52, 52);
 }
 
 .nameOrdner{
