@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
-    setFolderEventListeners();
-    setModalEventListeners();
-});
+
+setFolderEventListeners();
+setModalEventListeners();
+
 
 function setModalEventListeners() {
     const openModalButtons = document.querySelectorAll('[data-modal-target]');
@@ -63,25 +63,26 @@ function addOrdner() {
 
         inputOrdnerElement.value = "";
 
-        console.log(Ordner);
-
         ordnerHTML();
+
+        console.log(Ordner)
     }
 }
 
 function ordnerHTML() {
     let allHTML = '';
+    
     Ordner.forEach((ordner, index) => {
         const modalId = `editModal-${index}`;
         let html = `
-            <div class="ordnerBar" data-folder-name="${ordner.ordnerName}">
+            <div class="ordnerBar ordnerBar-${ordner.ordnerName}" data-folder-name="${ordner.ordnerName}">
                 <p class="nameOrdner">${ordner.ordnerName}</p>
                 <div class="editOrdner">
                     <div class="modal" id="${modalId}">
                         <button data-close-button class="QuitButton renameButton">
                             <img class="renameBild" src="Bilder/oen to square white.svg" alt="">
                         </button>
-                        <button data-close-button class="QuitButton trashButton">
+                        <button data-close-button class="QuitButton trashButton" data-folder-trash="${ordner.ordnerName}">
                             <img class="trashBild" src="Bilder/trash white.svg" alt="">
                         </button>
                     </div>
@@ -114,7 +115,34 @@ function setFolderEventListeners() {
             div.style.backgroundColor = "rgb(71, 69, 69)";
         });
     });
+
+    document.querySelectorAll('.trashButton')
+    .forEach((button) => {
+        button.addEventListener('click', () => {
+            const currentFolder = button.dataset.folderTrash
+            
+            removeFromOrdner(currentFolder)
+
+            const container= document.querySelector(`.ordnerBar-${currentFolder}`)
+            container.remove()
+        
+        })
+    })
 }
+
+function removeFromOrdner(currentFolder) {
+    const newOrdner = []
+
+            Ordner.forEach((ordner) => {
+                if (ordner.ordnerName !== currentFolder){
+                    newOrdner.push(ordner)
+                }
+            })
+
+            Ordner = newOrdner
+            
+}
+
 
 function addTodos(currentFolder) {
     const inputTodoElement = document.querySelector('.addNewCard');
@@ -122,12 +150,10 @@ function addTodos(currentFolder) {
 
     if (inputTodoValue !== '') {
         const folder = Ordner.find(folder => folder.ordnerName === currentFolder);
-        console.log(folder);
 
         if (folder) {
             folder.todos.push(inputTodoValue);
             inputTodoElement.value = '';
-            console.log(Ordner);
             todosHTML(currentFolder);
         }
     }

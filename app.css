@@ -194,10 +194,10 @@ html, body {
     padding-left: 25px; /* Platz für das Icon */
     background-color: rgb(6, 6, 6);
     color: white;            /* Textfarbe */
-    border: 2px solid grey; /* Randfarbe */
-    padding: 5px;            /* Padding für etwas Abstand innerhalb des Inputs */
-    border-radius: 15px;
-    margin-left: 18px;
+    border: 1px solid grey; /* Randfarbe */
+    padding: 8px;            /* Padding für etwas Abstand innerhalb des Inputs */
+    border-radius: 10px;
+    margin-left: 16px;
 }
 
 .addNewCard::placeholder{
