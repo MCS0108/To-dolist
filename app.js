@@ -79,9 +79,6 @@ function ordnerHTML() {
                 <p class="nameOrdner">${ordner.ordnerName}</p>
                 <div class="editOrdner">
                     <div class="modal" id="${modalId}">
-                        <button data-close-button class="QuitButton renameButton">
-                            <img class="renameBild" src="Bilder/oen to square white.svg" alt="">
-                        </button>
                         <button data-close-button class="QuitButton trashButton" data-folder-trash="${ordner.ordnerName}">
                             <img class="trashBild" src="Bilder/trash white.svg" alt="">
                         </button>
@@ -124,7 +121,10 @@ function setFolderEventListeners() {
             removeFromOrdner(currentFolder)
 
             const container= document.querySelector(`.ordnerBar-${currentFolder}`)
-            container.remove()
+            if (container) {
+                container.remove()
+            }
+            
         
         })
     })
@@ -163,22 +163,39 @@ function todosHTML(currentFolder) {
     let allTodoHTML = '';
     const folder = Ordner.find(folder => folder.ordnerName === currentFolder);
     if (folder) {
-        folder.todos.forEach((todo) => {
+        folder.todos.forEach((todo, index, ordner) => {
+            const modalid = `editmodal-${index}`;
             let html = `
             <div class="To-do">
                     <div class="divEins">
                         <input class="checkbox" type="checkbox">
                         <p class="todoName">${todo}</p>
                     </div>
-                    <div>
-                        <button class="elipsis_to-do"><img class="bild" src="Bilder/elipsis white.svg" alt=""></button>
+                    <div class="divdrei">
+                        <div class="modal" id="${modalid}">
+                            <button data-close-button class="QuitButton renameButtonTodo">
+                                <img class="renameBild" src="Bilder/oen to square white.svg" alt="">
+                            </button>
+                            <button data-close-button class="QuitButton trashButtonTodo" data-folder-trash="${ordner.ordnerName}">
+                                <img class="trashBild" src="Bilder/trash white.svg" alt="">
+                            </button>
+                        </div>
+                    
+                        <button data-modal-target="#${modalid}" class="elipsis_to-do">
+                            <img class="bild" src="Bilder/elipsis white.svg" alt="">
+                        </button>
+
                     </div>
+                    
+
                 </div>
             `;
             allTodoHTML += html;
         });
     }
     document.querySelector('.To-Dos').innerHTML = allTodoHTML;
+    setFolderEventListeners();
+    setModalEventListeners();  // Hinzufügen von Event-Listenern nach jeder Aktualisierung
 }
 
 // Initiales Setzen der Todos für den aktuell ausgewählten Ordner

@@ -120,6 +120,22 @@ html, body {
     font-weight: bold;
 }
 
+.renameButtonTodo{
+    margin-right: -8px;
+    border: none;
+    background-color: transparent;
+    transition: transform 0.4s ease, font-weight 1.5s ease;
+    cursor: pointer;
+}
+
+.trashButtonTodo{
+    margin-right: -10px;
+    border: none;
+    background-color: transparent;
+    transition: transform 0.4s ease, font-weight 1.5s ease;
+    cursor: pointer;
+}
+
 .renameBild {
     width: 12px;
 }
@@ -127,9 +143,10 @@ html, body {
 .trashButton{
     border: none;
     background-color: transparent;
-    margin-left: -8px;
+    margin-left: -2px;
     transition: transform 0.4s ease, font-weight 1.5s ease;
     cursor: pointer;
+    margin-top: 2px;
 }
 
 .trashBild{
@@ -140,7 +157,7 @@ html, body {
     border: none;
     background-color: transparent;
     cursor: pointer;
-    margin-top: 2px;
+    margin-top: 3px;
     margin-right: 5px;
     transition: transform 0.4s ease, font-weight 1.5s ease;
 }
@@ -276,6 +293,11 @@ html, body {
     background-color: transparent;
     cursor: pointer;
     transition: transform 0.4s ease, font-weight 1.5s ease;
+}
+
+.divdrei{
+    display: flex;
+    justify-content: space-between;
 }
 
 .elipsis_to-do:hover {
