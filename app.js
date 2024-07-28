@@ -136,11 +136,10 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
 
             removeFromTodo(currentTodo, currentFolder); // currentFolder hinzugefügt
 
-            console.log(`Current todo index: ${currentTodo}`);
+           
             const container = document.querySelector(`.To-do[data-todo-name="${currentTodo}"]`)
-            console.log(container);
+            
             if (container) {
-                console.log('hallo')
                 container.remove();
             }
         });
@@ -198,14 +197,14 @@ function removeFromTodo(currentTodo, currentFolder) {
 
     folder.todos.forEach((todo) => { //hier nutzt man dann folder 
         
-        if (todo !== currentTodo) {
+        if (todo.name !== currentTodo) {
             newTodos.push(todo); //irgendwas stimmt hier nicht 
-            
+            console.log(todo)
         }
+        
     });
 
     folder.todos = newTodos;
-    
 }
 
 function addTodos(currentFolder) {
