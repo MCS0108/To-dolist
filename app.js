@@ -43,8 +43,8 @@ function handleKeyDown(event) { //Der Code wird dann ausgeführt, wenn ich enter
 
 function handleKeyDownToDos(event) { //Der Code wird ausgeführt, wenn ich enter drücke beim input zum Erstellen von To-Dos
     if (event.key === 'Enter') {
-        addTodos(currentFolder);
-        todosHTML(currentFolder);
+        addTodos(currentFolderID);
+        todosHTML(currentFolderID);
     }
 }
 
@@ -104,11 +104,11 @@ function ordnerHTML() {
 function setFolderEventListeners() { // in dieser funktion sind jetzt verschiedene codes vorhanden die dafür sorgen, dass wenn ich irgendwelche buttons drücke, etwas passiert
     document.querySelectorAll('.ordnerBar').forEach((div) => {
         div.addEventListener('click', () => {
+            currentFolderID = div.dataset.folderId; // Sicherstellen, dass folderId korrekt zugewiesen wird
             currentFolder = div.dataset.folderName;
             
-            currentFolderID = div.dataset.folderId
 
-            todosHTML(currentFolder); // Zeige die Todos des ausgewählten Ordners an
+            todosHTML(currentFolderID); // Zeigt die Todos für den aktuellen Ordner an
             document.querySelector('.ordnerName').innerText = `${currentFolder}:`;
 
             document.querySelectorAll('.ordnerBar').forEach(folder => {
@@ -223,33 +223,33 @@ function addTodos(currentFolderID) {
     const inputTodoValue = inputTodoElement.value;
 
     if (inputTodoValue !== '') {
-        
         const folder = Ordner.find(folder => folder.id === currentFolderID);
         console.log(folder)
 
         if (folder) {
             const newTodo = {
                 name: inputTodoValue,
-                checkbox: false //weil erstmal wurde die checkbox nicht aktiviert und somit auf false
-            }
+                checkbox: false // Checkbox ist initial nicht aktiviert
+            };
             folder.todos.push(newTodo);
             inputTodoElement.value = '';
-            todosHTML(currentFolder); //dadurch wird es auf die seite projiziert
+            todosHTML(currentFolderID); // Verwende die ID, um die Todos zu aktualisieren
+        } else {
+            console.error("Fehler: Kein Ordner-Objekt mit dieser ID gefunden.");
         }
     }
-    
 }
 
-function todosHTML(currentFolder) {
+function todosHTML(currentFolderID) {
     let allTodoHTML = '';
-    const folder = Ordner.find(folder => folder.ordnerName === currentFolder);
+    const folder = Ordner.find(folder => folder.id === currentFolderID);
     if (folder) { 
         folder.todos.forEach((todo, index) => {
             const modalId = `editmodal-${index}`;
             let html = `
             <div class="To-do To-do-${index}" data-todo-name="${todo.name}">
                 <div class="divEins">
-                    <input class="checkbox" type="checkbox" data-ordner-name="${currentFolder}" data-todo-name="${todo.name}" ${todo.checkbox ? 'checked' : ''}>
+                    <input class="checkbox" type="checkbox" data-ordner-name="${currentFolderID}" data-todo-name="${todo.name}" ${todo.checkbox ? 'checked' : ''}>
                     <p class="todoName" data-todo-name="${todo.name}" ${todo.checkbox ? 'class="completed"' : ''}>
                         ${todo.name}
                     </p>
@@ -259,7 +259,7 @@ function todosHTML(currentFolder) {
                         <button data-close-button class="QuitButton renameButtonTodo">
                             <img class="renameBild" src="Bilder/oen to square white.svg" alt="">
                         </button>
-                        <button data-close-button class="QuitButton trashButtonTodo" data-todo-name="${todo.name}" data-folder-trash="${currentFolder}">
+                        <button data-close-button class="QuitButton trashButtonTodo" data-todo-name="${todo.name}" data-folder-trash="${currentFolderID}">
                             <img class="trashBild" src="Bilder/trash white.svg" alt="">
                         </button>
                     </div>
