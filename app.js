@@ -31,6 +31,7 @@ function closeModal(modal) {
 }
 
 let Ordner = [];
+let currentFolderID =''
 
 function handleKeyDown(event) { //Der Code wird dann ausgeführt, wenn ich enter drücke beim input zum Erstellen von Ordnern
     if (event.key === 'Enter') {
@@ -53,6 +54,7 @@ function addOrdner() {
 
     if (inputOrdnerValue !== '') { //wenn man da doch nichts hinschreibt wäre es schlecht wenn sich aber trotzdem ein ordner erstellen würde, welcher einfach kein name hat 
         const newOrdner = {
+            id: generateUniqueId(),
             ordnerName: inputOrdnerValue,
             todos: []
         };
@@ -66,17 +68,21 @@ function addOrdner() {
     }
 }
 
+function generateUniqueId() {
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
+
 function ordnerHTML() {
     let allHTML = '';
     
     Ordner.forEach((ordner, index) => { // Der Index sorgt dafür, dass die modal Id bei jedem Code anders ist, da sich der index bei jedem Durchlauf verädnert
         const modalId = `editModal-${index}`; //warum ist das nicht einfach nur der index: EIndeutigkeit der ID und bessere Lesbarkeit
         let html = `
-            <div class="ordnerBar ordnerBar-${ordner.ordnerName}" data-folder-name="${ordner.ordnerName}">
+            <div class="ordnerBar ordnerBar-${ordner.id}" data-folder-name="${ordner.ordnerName}" data-folder-id="${ordner.id}">
                 <p class="nameOrdner">${ordner.ordnerName}</p>
                 <div class="editOrdner">
                     <div class="modal" id="${modalId}">
-                        <button data-close-button class="QuitButton trashButton" data-folder-trash="${ordner.ordnerName}">
+                        <button data-close-button class="QuitButton trashButton" data-folder-trash="${ordner.ordnerName}" data-trash-id="${ordner.id}">
                             <img class="trashBild" src="Bilder/trash white.svg" alt="">
                         </button>
                     </div>
@@ -99,6 +105,9 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
     document.querySelectorAll('.ordnerBar').forEach((div) => {
         div.addEventListener('click', () => {
             currentFolder = div.dataset.folderName;
+            
+            currentFolderID = div.dataset.folderId
+
             todosHTML(currentFolder); // Zeige die Todos des ausgewählten Ordners an
             document.querySelector('.ordnerName').innerText = `${currentFolder}:`;
 
@@ -113,14 +122,15 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
     document.querySelectorAll('.trashButton').forEach((button) => {
         button.addEventListener('click', () => {
             const folderName = button.dataset.folderTrash;
-            removeFromOrdner(folderName);
+            folderID = button.dataset.trashId
+            removeFromOrdner(folderID);
 
             if (folderName === currentFolder) {
                 currentFolder = ''; // Reset des currentFolder
                 document.querySelector('.ordnerName').innerText = '';
             }
 
-            const container = document.querySelector(`.ordnerBar-${folderName}`);
+            const container = document.querySelector(`.ordnerBar-${folderID}`);
             if (container) {
                 container.remove();
             }
@@ -156,6 +166,8 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
     })
 }
 
+
+
 function checkBox(currentFolder, currentTodo) {
     const folder = Ordner.find(folder => folder.ordnerName === currentFolder);
     const todo = folder.todos.find(todo => todo.name === currentTodo)
@@ -169,7 +181,6 @@ function checkBox(currentFolder, currentTodo) {
 }
 
 function todoFilter(currentFolder) {
-    const folder = Ordner.find(folder => folder.ordnerName === currentFolder);
     All = document.querySelector('.buttonAll')
     
     if (All) {
@@ -178,8 +189,8 @@ function todoFilter(currentFolder) {
     
 }
 
-function removeFromOrdner(currentFolder) {
-    const newOrdner = Ordner.filter(ordner => ordner.ordnerName !== currentFolder);
+function removeFromOrdner(folderID) {
+    const newOrdner = Ordner.filter(ordner => ordner.id !== folderID);
     Ordner = newOrdner;
 
     // Leeren des Ordnernamens, wenn der gelöschte Ordner aktuell ausgewählt ist
@@ -207,12 +218,14 @@ function removeFromTodo(currentTodo, currentFolder) {
     folder.todos = newTodos;
 }
 
-function addTodos(currentFolder) {
+function addTodos(currentFolderID) {
     const inputTodoElement = document.querySelector('.addNewCard');
     const inputTodoValue = inputTodoElement.value;
 
     if (inputTodoValue !== '') {
-        const folder = Ordner.find(folder => folder.ordnerName === currentFolder);
+        
+        const folder = Ordner.find(folder => folder.id === currentFolderID);
+        console.log(folder)
 
         if (folder) {
             const newTodo = {
