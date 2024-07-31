@@ -140,14 +140,14 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
     document.querySelectorAll('.trashButtonTodo')
     .forEach((button) => {
         button.addEventListener('click', () => {
-            const currentTodo = button.dataset.todoName;
+            const currentTodoID = button.dataset.todoId;
             
-            const currentFolder = button.dataset.folderTrash; // Hinzugefügt
+            const currentFolderID = button.dataset.folderTrash; // Hinzugefügt
 
-            removeFromTodo(currentTodo, currentFolder); // currentFolder hinzugefügt
+            removeFromTodo(currentTodoID, currentFolderID); // currentFolder hinzugefügt
 
            
-            const container = document.querySelector(`.To-do[data-todo-name="${currentTodo}"]`)
+            const container = document.querySelector(`.To-do[data-todo-id="${currentTodoID}"]`)
             
             if (container) {
                 container.remove();
@@ -158,23 +158,23 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
     document.querySelectorAll('.checkbox')
     .forEach((input) => {
         input.addEventListener('click', () => {
-            currentFolder = input.dataset.ordnerName;
-            currentTodo = input.dataset.todoName;
+            currentFolderID = input.dataset.ordnerId;
+            currentTodoID = input.dataset.todoId;
             
-            checkBox(currentFolder, currentTodo)
+            checkBox(currentFolderID, currentTodoID)
         })
     })
 }
 
 
 
-function checkBox(currentFolder, currentTodo) {
-    const folder = Ordner.find(folder => folder.ordnerName === currentFolder);
-    const todo = folder.todos.find(todo => todo.name === currentTodo)
-    todo.checkbox = !todo.checkbox
+function checkBox(currentFolderID, currentTodoID) {
+    const folder = Ordner.find(folder => folder.id === currentFolderID);
+    const todo = folder.todos.find(todo => todo.id === currentTodoID)
+    todo.checkbox = !todo.checkbox 
     
     
-    const todoElement = document.querySelector(`.To-do[data-todo-name="${currentTodo}"] .todoName`);
+    const todoElement = document.querySelector(`.To-do[data-todo-id="${currentTodoID}"] .todoName`);
 
     todoElement.classList.toggle('completed'); //dadurch wird eine css-klasse hinzugefpgt und somit wird die todo durchgestrichen
         
@@ -202,15 +202,14 @@ function removeFromOrdner(folderID) {
     ordnerHTML();
 }
 
-function removeFromTodo(currentTodo, currentFolder) {
+function removeFromTodo(currentTodoID, currentFolderID) {
     const newTodos = [];
-    const folder = Ordner.find(folder => folder.ordnerName === currentFolder); //das braucht man, um genau den ordner zu finden in dem die todos gelöscht werden sollen 
+    const folder = Ordner.find(folder => folder.id === currentFolderID); //das braucht man, um genau den ordner zu finden in dem die todos gelöscht werden sollen 
 
     folder.todos.forEach((todo) => { //hier nutzt man dann folder 
         
-        if (todo.name !== currentTodo) {
+        if (todo.id !== currentTodoID) {
             newTodos.push(todo); //irgendwas stimmt hier nicht 
-            console.log(todo)
         }
         
     });
@@ -221,13 +220,14 @@ function removeFromTodo(currentTodo, currentFolder) {
 function addTodos(currentFolderID) {
     const inputTodoElement = document.querySelector('.addNewCard');
     const inputTodoValue = inputTodoElement.value;
+    console.log(Ordner)
 
     if (inputTodoValue !== '') {
         const folder = Ordner.find(folder => folder.id === currentFolderID);
-        console.log(folder)
 
         if (folder) {
             const newTodo = {
+                id: generateUniqueId(),
                 name: inputTodoValue,
                 checkbox: false // Checkbox ist initial nicht aktiviert
             };
@@ -247,10 +247,10 @@ function todosHTML(currentFolderID) {
         folder.todos.forEach((todo, index) => {
             const modalId = `editmodal-${index}`;
             let html = `
-            <div class="To-do To-do-${index}" data-todo-name="${todo.name}">
+            <div class="To-do To-do-${index}" data-todo-id="${todo.id}">
                 <div class="divEins">
-                    <input class="checkbox" type="checkbox" data-ordner-name="${currentFolderID}" data-todo-name="${todo.name}" ${todo.checkbox ? 'checked' : ''}>
-                    <p class="todoName" data-todo-name="${todo.name}" ${todo.checkbox ? 'class="completed"' : ''}>
+                    <input class="checkbox" type="checkbox" data-ordner-id="${currentFolderID}" data-todo-id="${todo.id}" ${todo.checkbox ? 'checked' : ''}>
+                    <p class="todoName ${todo.checkbox ? 'completed' : ''}" data-todo-id="${todo.id}">
                         ${todo.name}
                     </p>
                 </div>
@@ -259,7 +259,7 @@ function todosHTML(currentFolderID) {
                         <button data-close-button class="QuitButton renameButtonTodo">
                             <img class="renameBild" src="Bilder/oen to square white.svg" alt="">
                         </button>
-                        <button data-close-button class="QuitButton trashButtonTodo" data-todo-name="${todo.name}" data-folder-trash="${currentFolderID}">
+                        <button data-close-button class="QuitButton trashButtonTodo" data-todo-id="${todo.id}" data-folder-trash="${currentFolderID}">
                             <img class="trashBild" src="Bilder/trash white.svg" alt="">
                         </button>
                     </div>
