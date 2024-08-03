@@ -1,6 +1,8 @@
 setFolderEventListeners();
 setModalEventListeners();
 
+
+
 function setModalEventListeners() {
     const openModalButtons = document.querySelectorAll('[data-modal-target]');
     const closeModalButtons = document.querySelectorAll('[data-close-button]');
@@ -32,6 +34,8 @@ function closeModal(modal) {
 
 let Ordner = [];
 let currentFolderID =''
+
+
 
 function handleKeyDown(event) { //Der Code wird dann ausgeführt, wenn ich enter drücke beim input zum Erstellen von Ordnern
     if (event.key === 'Enter') {
@@ -165,8 +169,68 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
         })
     })
 }
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('show-all').addEventListener('click', () => {
+        renderTodos(currentFolderID, 'all');
+    });
+    document.getElementById('show-completed').addEventListener('click', () => {
+        renderTodos(currentFolderID, 'completed');
+    });
+    document.getElementById('show-pending').addEventListener('click', () => {
+        renderTodos(currentFolderID, 'pending');
+    });
+
+    renderTodos(currentFolderID, 'all'); // Initiales Laden der Todos
+});
 
 
+function renderTodos(currentFolderID, filter) {
+    let allTodoHTML = '';
+    const folder = Ordner.find(folder => folder.id === currentFolderID);
+    if (folder) {
+        folder.todos.forEach((todo, index) => {
+            if (
+                (filter === 'all') ||
+                (filter === 'completed' && todo.checkbox) ||
+                (filter === 'pending' && !todo.checkbox)
+            ) {
+                const modalId = `editmodal-${index}`;
+                let html = `
+                <div class="To-do To-do-${index}" data-todo-id="${todo.id}">
+                    <div class="divEins">
+                        <input class="checkbox" type="checkbox" data-ordner-id="${currentFolderID}" data-todo-id="${todo.id}" ${todo.checkbox ? 'checked' : ''}>
+                        <p class="todoName ${todo.checkbox ? 'completed' : ''}" data-todo-id="${todo.id}">
+                            ${todo.name}
+                        </p>
+                    </div>
+                    <div class="divdrei">
+                        <div class="modal" id="${modalId}">
+                            <button data-close-button class="QuitButton renameButtonTodo" data-ordner-id="${currentFolderID}" data-todo-id="${todo.id}" data-todo-name="${todo.name}">
+                                <img class="renameBild" src="Bilder/oen to square white.svg" alt="">
+                            </button>
+                            <button data-close-button class="QuitButton trashButtonTodo" data-todo-id="${todo.id}" data-folder-trash="${currentFolderID}">
+                                <img class="trashBild" src="Bilder/trash white.svg" alt="">
+                            </button>
+                        </div>
+                        <button data-modal-target="#${modalId}" class="elipsis_to-do">
+                            <img class="bild" src="Bilder/elipsis white.svg" alt="">
+                        </button>
+                    </div>
+                </div>
+                `;
+                allTodoHTML += html;
+            }
+        });
+    }
+    document.querySelector('.To-Dos').innerHTML = allTodoHTML;
+    setFolderEventListeners();
+    setModalEventListeners();
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderTodos(currentFolderID, 'all');
+});
 
 function checkBox(currentFolderID, currentTodoID) {
     const folder = Ordner.find(folder => folder.id === currentFolderID);
@@ -220,7 +284,6 @@ function removeFromTodo(currentTodoID, currentFolderID) {
 function addTodos(currentFolderID) {
     const inputTodoElement = document.querySelector('.addNewCard');
     const inputTodoValue = inputTodoElement.value;
-    console.log(Ordner)
 
     if (inputTodoValue !== '') {
         const folder = Ordner.find(folder => folder.id === currentFolderID);

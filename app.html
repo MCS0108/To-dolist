@@ -38,6 +38,7 @@
         <div clase3s="to-do-Bar">
 
             <input class="addNewCard" type="text" onkeydown="handleKeyDownToDos(event)" placeholder="Add a new To-Do:">
+            <input type="text" class="editTodoInput" placeholder="Rename todo" style="display:none;">
 
 
         </div>
@@ -46,9 +47,9 @@
 
             <div class="SelectButtons">
 
-                <button class="Button  buttonAll">All</button>
-                <button class="Button  buttonPending">pending</button>
-                <button class="Button  buttonCompleted">completed</button>
+                <button id="show-all" class="Button  buttonAll">All</button>
+                <button id="show-pending" class="Button  buttonPending">pending</button>
+                <button id="show-completed" class="Button  buttonCompleted">completed</button>
 
             </div>
 
