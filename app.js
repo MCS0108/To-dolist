@@ -169,11 +169,11 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
         })
     })
 }
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('show-all').addEventListener('click', () => {
+document.addEventListener('DOMContentLoaded', () => { //es wird erst ausgeführt, wenn das Dokument vollständig geladen ist 
+    document.querySelector('show-all').addEventListener('click', () => { //wenn man darauf drückt wird die Funktion renderTodos aufgerufen mit dem Parameter all und der currentfolderID 
         renderTodos(currentFolderID, 'all');
     });
-    document.getElementById('show-completed').addEventListener('click', () => {
+    document.getElementById('show-completed').addEventListener('click', () => { //man benutzt getElementbyld um auf htmlELement zuzugreifen und wenn man es mit IDs macht ist das am effizientesten
         renderTodos(currentFolderID, 'completed');
     });
     document.getElementById('show-pending').addEventListener('click', () => {
@@ -184,14 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-function renderTodos(currentFolderID, filter) {
+function renderTodos(currentFolderID, filter) { //filter ist dann zum beispiel pending
     let allTodoHTML = '';
     const folder = Ordner.find(folder => folder.id === currentFolderID);
     if (folder) {
         folder.todos.forEach((todo, index) => {
             if (
                 (filter === 'all') ||
-                (filter === 'completed' && todo.checkbox) ||
+                (filter === 'completed' && todo.checkbox) || //das heißt wenn jetzt ein durchlauf ist mit der nächsten todo aber todo checkbox false ist dann wird es einfach übersprungen und zur nächsten todo gegangen
                 (filter === 'pending' && !todo.checkbox)
             ) {
                 const modalId = `editmodal-${index}`;
@@ -244,7 +244,7 @@ function checkBox(currentFolderID, currentTodoID) {
         
 }
 
-function todoFilter(currentFolder) {
+function todoFilter() {
     All = document.querySelector('.buttonAll')
     
     if (All) {
@@ -273,7 +273,7 @@ function removeFromTodo(currentTodoID, currentFolderID) {
     folder.todos.forEach((todo) => { //hier nutzt man dann folder 
         
         if (todo.id !== currentTodoID) {
-            newTodos.push(todo); //irgendwas stimmt hier nicht 
+            newTodos.push(todo); 
         }
         
     });
@@ -297,8 +297,6 @@ function addTodos(currentFolderID) {
             folder.todos.push(newTodo);
             inputTodoElement.value = '';
             todosHTML(currentFolderID); // Verwende die ID, um die Todos zu aktualisieren
-        } else {
-            console.error("Fehler: Kein Ordner-Objekt mit dieser ID gefunden.");
         }
     }
 }
