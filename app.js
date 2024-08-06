@@ -125,18 +125,27 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
 
     document.querySelectorAll('.trashButton').forEach((button) => {
         button.addEventListener('click', () => {
-            const folderName = button.dataset.folderTrash;
-            folderID = button.dataset.trashId
-            removeFromOrdner(folderID);
-
-            if (folderName === currentFolder) {
-                currentFolder = ''; // Reset des currentFolder
-                document.querySelector('.ordnerName').innerText = '';
-            }
-
-            const container = document.querySelector(`.ordnerBar-${folderID}`);
-            if (container) {
-                container.remove();
+            const folderID = button.dataset.trashId;
+            const currentFolder = button.dataset.folderTrash;
+    
+            // Überprüfen, ob das Element .ordnerName existiert
+            const ordnerNameElement = document.querySelector('.ordnerName');
+            if (ordnerNameElement) {
+                // Ordner entfernen
+                removeFromOrdner(folderID);
+    
+                // Überprüfen, ob der gelöschte Ordner der aktuelle Ordner ist
+                if (ordnerNameElement.innerText.startsWith(currentFolder)) {
+                    ordnerNameElement.innerText = '';
+                }
+    
+                // Entfernen des Ordner-Containers
+                const container = document.querySelector(`.ordnerBar-${folderID}`);
+                if (container) {
+                    container.remove();
+                }
+            } else {
+                console.error("Element mit der Klasse 'ordnerName' nicht gefunden.");
             }
         });
     });
@@ -170,7 +179,7 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
     })
 }
 document.addEventListener('DOMContentLoaded', () => { //es wird erst ausgeführt, wenn das Dokument vollständig geladen ist 
-    document.querySelector('show-all').addEventListener('click', () => { //wenn man darauf drückt wird die Funktion renderTodos aufgerufen mit dem Parameter all und der currentfolderID 
+    document.getElementById('show-all').addEventListener('click', () => { //wenn man darauf drückt wird die Funktion renderTodos aufgerufen mit dem Parameter all und der currentfolderID 
         renderTodos(currentFolderID, 'all');
     });
     document.getElementById('show-completed').addEventListener('click', () => { //man benutzt getElementbyld um auf htmlELement zuzugreifen und wenn man es mit IDs macht ist das am effizientesten
@@ -256,11 +265,6 @@ function todoFilter() {
 function removeFromOrdner(folderID) {
     const newOrdner = Ordner.filter(ordner => ordner.id !== folderID);
     Ordner = newOrdner;
-
-    // Leeren des Ordnernamens, wenn der gelöschte Ordner aktuell ausgewählt ist
-    if (document.querySelector('.ordnerName').innerText.startsWith(currentFolder)) {
-        document.querySelector('.ordnerName').innerText = '';
-    }
 
     // Aktualisiere die Anzeige
     ordnerHTML();
