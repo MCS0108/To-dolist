@@ -54,9 +54,9 @@ function handleKeyDownToDos(event) { //Der Code wird ausgeführt, wenn ich enter
 
 function addOrdner() {
     const inputOrdnerElement = document.querySelector('.inputOrdner');
-    const inputOrdnerValue = inputOrdnerElement.value.trim(); //trim entfernt Leerzeichen am Anfang und am Ende
+    const inputOrdnerValue = inputOrdnerElement.value.trim();
 
-    if (inputOrdnerValue !== '') { //wenn man da doch nichts hinschreibt wäre es schlecht wenn sich aber trotzdem ein ordner erstellen würde, welcher einfach kein name hat 
+    if (inputOrdnerValue !== '') {
         const newOrdner = {
             id: generateUniqueId(),
             ordnerName: inputOrdnerValue,
@@ -64,13 +64,13 @@ function addOrdner() {
         };
 
         Ordner.push(newOrdner);
+        saveToLocalStorage();  // Speichern nach Hinzufügen eines neuen Ordners
 
-        inputOrdnerElement.value = ""; //dadurch ist der input dann wieder leer
-
-        ordnerHTML(); // die Funktion lädt dann den ganzen Code auf die Website, wodurch man den hinzugefügten Ordner sieht
-
+        inputOrdnerElement.value = "";
+        ordnerHTML();
     }
 }
+
 
 function generateUniqueId() {
     return '_' + Math.random().toString(36).substr(2, 9);
@@ -178,11 +178,13 @@ function setFolderEventListeners() { // in dieser funktion sind jetzt verschiede
         })
     })
 }
-document.addEventListener('DOMContentLoaded', () => { //es wird erst ausgeführt, wenn das Dokument vollständig geladen ist 
-    document.getElementById('show-all').addEventListener('click', () => { //wenn man darauf drückt wird die Funktion renderTodos aufgerufen mit dem Parameter all und der currentfolderID 
+document.addEventListener('DOMContentLoaded', () => {
+    loadFromLocalStorage();
+    
+    document.getElementById('show-all').addEventListener('click', () => {
         renderTodos(currentFolderID, 'all');
     });
-    document.getElementById('show-completed').addEventListener('click', () => { //man benutzt getElementbyld um auf htmlELement zuzugreifen und wenn man es mit IDs macht ist das am effizientesten
+    document.getElementById('show-completed').addEventListener('click', () => {
         renderTodos(currentFolderID, 'completed');
     });
     document.getElementById('show-pending').addEventListener('click', () => {
@@ -191,6 +193,18 @@ document.addEventListener('DOMContentLoaded', () => { //es wird erst ausgeführt
 
     renderTodos(currentFolderID, 'all'); // Initiales Laden der Todos
 });
+
+function loadFromLocalStorage() {
+    const storedOrdner = localStorage.getItem('ordner');
+    if (storedOrdner) {
+        Ordner = JSON.parse(storedOrdner);
+        ordnerHTML();
+    }
+}
+
+function saveToLocalStorage() {
+    localStorage.setItem('ordner', JSON.stringify(Ordner));
+}
 
 
 function renderTodos(currentFolderID, filter) { //filter ist dann zum beispiel pending
@@ -245,7 +259,7 @@ function checkBox(currentFolderID, currentTodoID) {
     const folder = Ordner.find(folder => folder.id === currentFolderID);
     const todo = folder.todos.find(todo => todo.id === currentTodoID)
     todo.checkbox = !todo.checkbox 
-    
+    saveToLocalStorage()
     
     const todoElement = document.querySelector(`.To-do[data-todo-id="${currentTodoID}"] .todoName`);
 
@@ -265,7 +279,7 @@ function todoFilter() {
 function removeFromOrdner(folderID) {
     const newOrdner = Ordner.filter(ordner => ordner.id !== folderID);
     Ordner = newOrdner;
-
+    saveToLocalStorage()
     // Aktualisiere die Anzeige
     ordnerHTML();
 }
@@ -281,7 +295,7 @@ function removeFromTodo(currentTodoID, currentFolderID) {
         }
         
     });
-
+    saveToLocalStorage()
     folder.todos = newTodos;
 }
 
@@ -299,6 +313,8 @@ function addTodos(currentFolderID) {
                 checkbox: false // Checkbox ist initial nicht aktiviert
             };
             folder.todos.push(newTodo);
+            saveToLocalStorage()
+
             inputTodoElement.value = '';
             todosHTML(currentFolderID); // Verwende die ID, um die Todos zu aktualisieren
         }
